@@ -1,5 +1,4 @@
 #####Packages#####
-setwd("C:/Users/Jack Wychor/Downloads/R Files")
 require('dplyr')
 require("reshape2")
 require('tidyr')
@@ -16,10 +15,10 @@ require('deepboost')
 require('doParallel')
 require('xgboost')
 require('PRROC')
-system("cmd.exe /C dir")
-system("cmd.exe /C dir /AH")
 
 ###Data Cleaning and Analysis#####
+#Data was downloaded from the URL: 
+#https://www.kaggle.com/pavansubhasht/ibm-hr-analytics-attrition-dataset
 k<-read.csv('Kaggle IBM.csv')
 colnames(k)[1]<-'Age'
 
@@ -421,25 +420,14 @@ confusionMatrix(spred,ref=tek$Attrition)
                                          
 #       'Positive' Class : No
 
-#The final XGBTree model produced is highly sensitive,
-#while having only modest specificity. When compared to
+#The final model that XGBTree produced is highly sensitive,
+#while having only modest specificity.
 #This may be desirable if a company wanted a test that
 #accurately told them which employees were not at risk of
 #attrition while still having a ~25% chance of detecting employees
-#who are. For a model significantly higher specificity, the VGLM and
-#SVMR can be used (See line #246 for reference) with only
-#minor reductions in ROC and Sensisitivity.
+#who are. For a model with potentially higher specificity, the VGLM or
+#SVMR could have been tested (See line #246 for reference) with 
+#theoretically minor reductions in ROC and Sensisitivity.
 
-##VGLM Training
-set.seed(132)
-vglmfit2<-train(Attrition~.,data=trk,
-               method='vglmCumulative',
-               trControl=fitc2,
-               metric='ROC',
-               tuneLength=10,
-               seeds=791)
-vglmfit2
-
-spred2<-predict(svfit2,tek)
-confusionMatrix(spred2,ref=tek$Attrition)
-
+##Close Extra CPU usage
+stopCluster(cl)
