@@ -1,4 +1,5 @@
 #####Packages#####
+setwd("C:/Users/Jack Wychor/Downloads/R Files")
 require('dplyr')
 require("reshape2")
 require('tidyr')
@@ -9,7 +10,6 @@ require('stringr')
 require('randomForest')
 require('e1071')
 require('mlbench')
-require('CHAID')
 require('VGAM')
 require('deepboost')
 require('doParallel')
@@ -17,7 +17,7 @@ require('xgboost')
 require('PRROC')
 
 ###Data Cleaning and Analysis#####
-#Data was downloaded from the URL: 
+#Data can be found at the URL:
 #https://www.kaggle.com/pavansubhasht/ibm-hr-analytics-attrition-dataset
 k<-read.csv('Kaggle IBM.csv')
 colnames(k)[1]<-'Age'
@@ -54,7 +54,7 @@ kd<-data.frame(k2,e)
 
 ##5. Data Splitting
 #Splitting based on y (splitting on x or time series is sometimes appropriate)
-ti<-createDataPartition(ktr$Attrition,p=.75,
+ti<-createDataPartition(kd$Attrition,p=.75,
                         list=F,times=1)
 
 trk<-ktr[ti,]
@@ -374,7 +374,7 @@ xgb_final <- expand.grid(
   min_child_weight = 2,
   subsample = .5
 )
-
+###The Final XGBTree Model Cross-Validation Results#####
 system.time(xgbfitfinal<-train(Attrition~.,data=trk,
                            method='xgbTree',
                            trControl=fitc2,
@@ -388,43 +388,41 @@ imp<-varImp(xgbfitfinal,scale=F)
 plot(imp)
 
 #Comparing the Final Model to Test Data
-spred<-predict(xgbfitfinal,tek)
-confusionMatrix(spred,ref=tek$Attrition)
+spred<-predict(xgbfitfinal,ktr)
+confusionMatrix(spred,ref=ktr$Attrition)
 
-
-###The Final XGBTree Model Cross-Validation Results#####
 #Confusion Matrix and Statistics
 
 #Reference
 #Prediction  No Yes
-#       No  303  43
-#      Yes   5  16
+#       No  303  42
+#       Yes   5  17
 
-#Accuracy : 0.8692         
-#95% CI : (0.8304, 0.902)
-#No Information Rate : 0.8392         
-#P-Value [Acc > NIR] : 0.06498        
+#Accuracy : 0.8719          
+#95% CI : (0.8334, 0.9044)
+#No Information Rate : 0.8392          
+#P-Value [Acc > NIR] : 0.04801         
 
-#Kappa : 0.3447         
+#Kappa : 0.3642          
 
-#Mcnemar's Test P-Value : 9.27e-08       
-                                         
-#            Sensitivity : 0.9838         
-#            Specificity : 0.2712         
-#         Pos Pred Value : 0.8757         
-#         Neg Pred Value : 0.7619         
-#             Prevalence : 0.8392         
-#         Detection Rate : 0.8256         
-#   Detection Prevalence : 0.9428         
-#      Balanced Accuracy : 0.6275         
-                                         
-#       'Positive' Class : No
+#Mcnemar's Test P-Value : 1.512e-07       
+                                          
+#            Sensitivity : 0.9838          
+#            Specificity : 0.2881          
+#         Pos Pred Value : 0.8783          
+#         Neg Pred Value : 0.7727          
+#             Prevalence : 0.8392          
+#         Detection Rate : 0.8256          
+#   Detection Prevalence : 0.9401          
+#      Balanced Accuracy : 0.6360          
+                                          
+#       'Positive' Class : No    
 
 #The final model that XGBTree produced is highly sensitive,
 #while having only modest specificity.
 #This may be desirable if a company wanted a test that
 #accurately told them which employees were not at risk of
-#attrition while still having a ~25% chance of detecting employees
+#attrition while still having a ~30% chance of detecting employees
 #who are. For a model with potentially higher specificity, the VGLM or
 #SVMR could have been tested (See line #244 for reference) with 
 #theoretically minor reductions in ROC and Sensisitivity.
