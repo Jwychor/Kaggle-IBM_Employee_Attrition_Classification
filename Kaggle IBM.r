@@ -426,7 +426,7 @@ confusionMatrix(spred,ref=tek$Attrition)
 #accurately told them which employees were not at risk of
 #attrition while still having a ~25% chance of detecting employees
 #who are. For a model with potentially higher specificity, the VGLM or
-#SVMR could have been tested (See line #246 for reference) with 
+#SVMR could have been tested (See line #244 for reference) with 
 #theoretically minor reductions in ROC and Sensisitivity.
 
 ##Close Extra CPU usage
