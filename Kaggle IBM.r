@@ -1,5 +1,4 @@
 #####Packages#####
-setwd("C:/Users/Jack Wychor/Downloads/R Files")
 require('dplyr')
 require("reshape2")
 require('tidyr')
